@@ -25,6 +25,7 @@
   const fullscreenButton = document.querySelector("#fullscreen-button");
   const expandIcon = document.querySelector("#expand-icon");
   const collapseIcon = document.querySelector("#collapse-icon");
+  const fullscreenSupported = document.fullscreenEnabled && typeof stage.requestFullscreen === "function";
 
   const millisecondsPerMinute = 60_000;
   const tickingWindow = 5_000;
@@ -172,7 +173,7 @@
     renderControls();
   }
 
-  async function startOrPause() {
+  async function startOrPause(openFullscreen = false) {
     if (state === "running") {
       updateRunningTime();
       if (state === "running") {
@@ -187,7 +188,7 @@
     const selected = readDuration();
     if (selected === null) {
       showDurationError(true);
-      if (document.fullscreenElement === stage) await document.exitFullscreen().catch(() => {});
+      if (document.fullscreenElement === stage) await setFullscreen(false);
       minutesInput.focus();
       return;
     }
@@ -196,6 +197,7 @@
     deadline = Date.now() + remaining;
     state = "running";
     renderControls();
+    if (openFullscreen && fullscreenSupported && document.fullscreenElement !== stage) setFullscreen(true);
     syncTicking();
     frame = requestAnimationFrame(animate);
     scheduleNextCue();
@@ -227,11 +229,20 @@
     collapseIcon.toggleAttribute("hidden", !expanded);
   }
 
+  async function setFullscreen(expanded) {
+    try {
+      if (expanded) await stage.requestFullscreen();
+      else await document.exitFullscreen();
+    } catch {
+      renderFullscreen();
+    }
+  }
+
   form.addEventListener("submit", event => {
     event.preventDefault();
-    startOrPause();
+    startOrPause(true);
   });
-  displayPlayButton.addEventListener("click", startOrPause);
+  displayPlayButton.addEventListener("click", () => startOrPause(true));
 
   minutesInput.addEventListener("input", () => {
     const selected = readDuration();
@@ -266,14 +277,9 @@
     if (ticking) playSound(tickingSound);
   });
 
-  fullscreenButton.hidden = !document.fullscreenEnabled || !stage.requestFullscreen;
-  fullscreenButton.addEventListener("click", async () => {
-    try {
-      if (document.fullscreenElement === stage) await document.exitFullscreen();
-      else await stage.requestFullscreen();
-    } catch {
-      renderFullscreen();
-    }
+  fullscreenButton.hidden = !fullscreenSupported;
+  fullscreenButton.addEventListener("click", () => {
+    setFullscreen(document.fullscreenElement !== stage);
   });
   document.addEventListener("fullscreenchange", renderFullscreen);
 

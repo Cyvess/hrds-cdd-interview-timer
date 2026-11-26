@@ -10,7 +10,7 @@ Open `index.html` in a browser. The timer runs entirely on the device, with its 
 
 - **Space** starts, pauses, or resumes the countdown when focus is outside a control.
 - **R** resets the countdown when focus is outside a control.
-- The play/pause button beside the speaker controls the countdown in both normal and fullscreen views. The speaker toggles the ticking sound for the final five seconds and the alarm at zero. The expand button opens fullscreen in supported browsers.
+- Use either Play button to start or resume in fullscreen on supported browsers. The button beside the speaker can also pause the countdown in fullscreen. The expand button toggles fullscreen, and the speaker toggles the ticking sound and alarm.
 - The panelist and candidate cats sway while the timer is ready or running and hop twice when time is up. The dial and cats respect the browser’s reduced-motion setting.
 
 ## Assets
