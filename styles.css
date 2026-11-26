@@ -347,14 +347,15 @@ svg {
   transform: translateY(-50%);
 }
 
-.character-panelist { left: var(--character-inset); }
-.character-candidate { --lean: 4deg; right: var(--character-inset); }
+.character-candidate { --lean: 4deg; left: var(--character-inset); }
+.character-panelist { right: var(--character-inset); }
 
 .character img {
   display: block;
   width: 100%;
   aspect-ratio: 2 / 3;
   filter: drop-shadow(0 9px 9px #03131cb3);
+  scale: -1 1;
   transform-origin: center 87%;
   animation: character-idle 4.8s ease-in-out infinite;
 }
