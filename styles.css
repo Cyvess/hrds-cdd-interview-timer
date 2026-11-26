@@ -100,8 +100,6 @@ svg {
   letter-spacing: -.06em;
 }
 
-.intro h1 span { color: #21896c; }
-
 .workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(290px, 338px);

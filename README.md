@@ -1,4 +1,4 @@
-# HRDS-CDD Interview Timer
+# Interview Timer
 
 Choose a preset or enter any whole number from 1 to 999 minutes, then select **Start timer**. The 3D dial shows how much time remains. Pause and resume with the same button, or use the reset button to restore the selected duration.
 
