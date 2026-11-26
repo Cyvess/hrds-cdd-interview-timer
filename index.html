@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f7f3">
+  <meta name="description" content="A countdown timer for HRDS-CDD interviews.">
+  <title>HRDS-CDD Interview Timer</title>
+  <link rel="icon" href="./assets/denr-seal.png" type="image/png">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="page-width masthead-inner">
+      <img class="seal" src="./assets/denr-seal.png" alt="DENR seal" width="48" height="48">
+      <p class="brand"><strong>DENR</strong><span>Department of Environment and Natural Resources</span></p>
+    </div>
+  </header>
+
+  <main class="page-width">
+    <div class="intro">
+      <h1>HRDS-CDD Interview Timer<span aria-hidden="true">.</span></h1>
+    </div>
+
+    <div class="workspace">
+      <section class="stage" id="timer-stage" data-state="ready" aria-label="Countdown display">
+        <div class="stage-top">
+          <div class="status" role="status"><span class="status-dot" aria-hidden="true"></span><span id="status-text">Ready</span></div>
+          <div class="display-actions">
+            <button class="display-button" id="display-play-button" type="button" aria-label="Start timer" title="Start timer">
+              <svg class="icon-play" id="display-play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5a.75.75 0 0 0-1.15.64v11.72a.75.75 0 0 0 1.15.64l9.7-5.86a.75.75 0 0 0 0-1.28L8 5.5Z"/></svg>
+              <svg id="display-pause-icon" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M9 6v12m6-12v12"/></svg>
+            </button>
+            <button class="display-button" id="sound-button" type="button" aria-label="Timer sounds" aria-pressed="true" title="Mute timer sounds">
+              <svg id="sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5ZM15 9a4.2 4.2 0 0 1 0 6m3-9a8.5 8.5 0 0 1 0 12"/></svg>
+              <svg id="sound-off" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M11 5 6 9H3v6h3l5 4V5Zm5 5 5 5m0-5-5 5"/></svg>
+            </button>
+            <button class="display-button" id="fullscreen-button" type="button" aria-label="Show timer fullscreen" title="Show timer fullscreen">
+              <svg id="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></svg>
+              <svg id="collapse-icon" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M4 9h5V4m11 5h-5V4M9 20v-5H4m11 5v-5h5"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="dial">
+          <div class="dial-light" aria-hidden="true"></div>
+          <div class="dial-body" aria-hidden="true">
+            <div class="dial-ticks"></div>
+            <div class="dial-rim"></div>
+            <div class="dial-glass"></div>
+            <div class="dial-track"></div>
+            <div class="dial-progress"></div>
+            <div class="dial-pin"></div>
+          </div>
+          <div class="clock" id="clock" role="timer" aria-label="Time remaining">
+            <span class="clock-unit"><span class="clock-value" id="clock-minutes">05</span><span class="clock-caption">Min</span></span>
+            <span class="clock-divider" aria-hidden="true">:</span>
+            <span class="clock-unit"><span class="clock-value" id="clock-seconds">00</span><span class="clock-caption">Sec</span></span>
+          </div>
+        </div>
+
+        <figure class="character character-panelist">
+          <img src="./assets/cat-panelist.webp" alt="" draggable="false">
+          <figcaption>Panelist</figcaption>
+        </figure>
+        <figure class="character character-candidate">
+          <img src="./assets/cat-candidate.webp" alt="" draggable="false">
+          <figcaption>Candidate</figcaption>
+        </figure>
+      </section>
+
+      <form class="settings" id="timer-form" aria-labelledby="settings-title" novalidate>
+        <div class="settings-heading">
+          <div class="settings-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M9 2h6m-3 9v3l2 1m4.2-7.2L20 6"/><circle cx="12" cy="14" r="7.5"/></svg>
+          </div>
+          <h2 id="settings-title">Set duration</h2>
+        </div>
+
+        <div id="controls">
+          <label class="field-label" for="minutes">Minutes</label>
+          <div class="stepper">
+            <button id="decrease" type="button" aria-label="Decrease by one minute" title="Decrease by one minute">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>
+            </button>
+            <input id="minutes" name="minutes" type="number" inputmode="numeric" min="1" max="999" step="1" value="5" aria-describedby="duration-error" required>
+            <button id="increase" type="button" aria-label="Increase by one minute" title="Increase by one minute">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12m-6-6v12"/></svg>
+            </button>
+          </div>
+          <p class="duration-error" id="duration-error" role="alert" hidden>Enter a whole number from 1 to 999.</p>
+
+          <div class="preset-label" id="preset-label">Quick select</div>
+          <div class="presets" role="group" aria-labelledby="preset-label">
+            <button type="button" data-minutes="1" aria-pressed="false">1 min</button>
+            <button type="button" data-minutes="5" aria-pressed="true">5 min</button>
+            <button type="button" data-minutes="10" aria-pressed="false">10 min</button>
+            <button type="button" data-minutes="25" aria-pressed="false">25 min</button>
+          </div>
+        </div>
+
+        <div class="timer-actions">
+          <button class="start-button" id="start-button" type="submit">
+            <svg class="icon-play" id="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5a.75.75 0 0 0-1.15.64v11.72a.75.75 0 0 0 1.15.64l9.7-5.86a.75.75 0 0 0 0-1.28L8 5.5Z"/></svg>
+            <svg id="pause-icon" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M9 6v12m6-12v12"/></svg>
+            <span id="start-label">Start timer</span>
+          </button>
+          <button class="reset-button" id="reset-button" type="button" aria-label="Reset timer" title="Reset timer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v5h5M4.3 10A8 8 0 1 1 5 16"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <footer class="shortcuts" aria-label="Keyboard shortcuts">
+      <span><kbd>Space</kbd> Start / pause</span>
+      <span><kbd>R</kbd> Reset</span>
+    </footer>
+  </main>
+
+  <audio id="ticking-sound" src="./assets/Clock%20Ticking%20Sound%20Effect.mp3" preload="auto" hidden></audio>
+  <audio id="alarm-sound" src="./assets/Classic%20Alarm%20Clock%20-%20Sound%20Effect%20for%20Editing.mp3" preload="auto" hidden></audio>
+</body>
+</html>
